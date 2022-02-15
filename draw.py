@@ -12,6 +12,8 @@ import pathlib
 my_color = mpf.make_marketcolors(up='r', down='g', edge='inherit', wick='inherit', volume='inherit')
 my_style = mpf.make_mpf_style(marketcolors=my_color)
 
+FOLDER = "img"
+
 
 def gen_kline(data, fpath):
     data = pd.DataFrame(data)
@@ -25,6 +27,10 @@ def gen_kline(data, fpath):
 def bluk():
     config = configparser.ConfigParser()
     config.read('config.ini')
+
+    p = pathlib.Path(FOLDER)
+    if not p.exists():
+        p.mkdir(parents=True)
 
     symbol_list = config.get('PROB', 'ID_LIST').split(',')
 
@@ -40,7 +46,7 @@ def bluk():
         stock_zh_a_hist_df.rename(columns={'日期': 'datetime', '开盘': 'open', '收盘': 'close', '最高': 'high', '最低': 'low', '成交量': 'volume'}, inplace=True)
         stock_zh_a_hist_df = stock_zh_a_hist_df[['datetime', 'open','close','high','low','volume']]
 
-        fpath = pathlib.Path('.'.join(['_'.join([end_date, symbol]), 'jpg']))
+        fpath = pathlib.Path().joinpath(FOLDER, '.'.join(['_'.join([end_date, symbol]), 'jpg']))
         gen_kline(stock_zh_a_hist_df, fpath)
 
 
