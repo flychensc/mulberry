@@ -32,6 +32,8 @@ def bluk():
     if not p.exists():
         p.mkdir(parents=True)
 
+    PERIOD = config.getint('CANDLE', 'PERIOD')
+
     symbol_list = config.get('PROB', 'ID_LIST').split(',')
 
     day = dt.datetime.strptime(config.get('PROB', 'DAY'), "%Y-%m-%d").date()
@@ -47,7 +49,10 @@ def bluk():
         stock_zh_a_hist_df = stock_zh_a_hist_df[['datetime', 'open','close','high','low','volume']]
 
         fpath = pathlib.Path().joinpath(FOLDER, '.'.join(['_'.join([end_date, symbol]), 'jpg']))
-        gen_kline(stock_zh_a_hist_df, fpath)
+        if len(stock_zh_a_hist_df) < PERIOD:
+            print("length error on ", symbol)
+        else:
+            gen_kline(stock_zh_a_hist_df[-PERIOD:], fpath)
 
 
 if __name__ == "__main__":
