@@ -4,6 +4,7 @@ import tensorflow as tf
 # Helper libraries
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import random
 import pathlib
 
@@ -42,15 +43,13 @@ def load_datasheet(path, disp_one=False):
 
   image_count = len(all_image_paths)
 
-  all_codes = [image_path.split('.')[0].split('_')[1] for image_path in all_image_paths]
-
   # 构建一个 tf.data.Dataset
   # 将字符串数组切片，得到一个字符串数据集
   path_ds = tf.data.Dataset.from_tensor_slices(all_image_paths)
   # 现在创建一个新的数据集，通过在路径数据集上映射 preprocess_image 来动态加载和格式化图片
   image_ds = path_ds.map(load_and_preprocess_image, num_parallel_calls=AUTOTUNE)
   # 使用同样的 from_tensor_slices 方法你可以创建一个标签数据集
-  label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(all_codes, tf.string))
+  label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(all_image_paths, tf.string))
   # 由于这些数据集顺序相同，可以将他们打包在一起得到一个(图片, 标签)对数据集：
   image_label_ds = tf.data.Dataset.zip((image_ds, label_ds))
 
@@ -63,6 +62,16 @@ def load_datasheet(path, disp_one=False):
     plt.show()
 
   return image_label_ds, image_count
+
+
+def get_date(path_bytes):
+  path_str = path_bytes.decode("utf-8")
+  return path_str.split("_")[0][-8:]
+
+
+def get_symbol(path_bytes):
+  path_str = path_bytes.decode("utf-8")
+  return path_str.split("_")[1][:6]
 
 
 #class_names = sorted(item.name for item in pathlib.Path('./test').glob('*/') if item.is_dir())
@@ -83,7 +92,7 @@ def plot_image(i, predictions_array, true_label, img):
 
   plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
                                 100*np.max(predictions_array),
-                                true_label.decode("utf-8")),
+                                get_symbol(true_label)),
                                 color=color)
 
 def plot_value_array(predictions_array):
@@ -98,6 +107,8 @@ def plot_value_array(predictions_array):
 
 
 def prob():
+  predicting = pd.DataFrame(columns=['order_day', 'order_book_id', "prob", "classify"])
+
   # 从保存的模型重新加载一个新的 Keras 模型
   model = tf.keras.models.load_model('saved_model/my_model')
 
@@ -112,15 +123,34 @@ def prob():
   probability_model = tf.keras.Sequential([model,
                                           tf.keras.layers.Softmax()])
   predictions = probability_model.predict(test_ds)
-  print(predictions[0])
-  # 哪个标签的置信度值最大
-  print(np.argmax(predictions[0]))
+
+
   # 检查测试标签
   test_list = list(test_ds)
   test_images = np.array(test_list[0][0])
   test_labels = np.array(test_list[0][1])
-  print(test_labels[0].decode("utf-8"))
+  for rest_list in test_list[1:]:
+    img = np.array(rest_list[0])
+    label = np.array(rest_list[1])
+    test_images = np.concatenate((test_images, img))
+    test_labels = np.concatenate((test_labels, label))
 
+  # 检查测试标签
+  for i in range(test_count):
+    order_day = get_date(test_labels[i])
+    order_book_id = get_symbol(test_labels[i])
+    # 哪个标签的置信度值最大
+    prob = np.max(predictions[i])
+    classify = class_names[np.argmax(predictions[i])]
+    predicting = predicting.append({
+        'order_day': order_day,
+        'order_book_id': order_book_id,
+        "prob": round(prob, 2),
+        "classify": classify
+      }, ignore_index=True)
+
+  print(predicting)
+  predicting.to_csv("predicting.csv", mode='a', index=False)
 
   # Plot the first X test images, their predicted labels, and the true labels.
   # Color correct predictions in blue and incorrect predictions in red.
@@ -136,18 +166,6 @@ def prob():
     plot_value_array(predictions[i])
   plt.tight_layout()
   plt.show()
-
-  if test_count > 1:
-    # 使用训练好的模型
-    img = test_images[1]
-    img = (np.expand_dims(img,0))
-    predictions_single = probability_model.predict(img)
-
-    print(predictions_single)
-    print(np.argmax(predictions_single[0]))
-    print(test_labels[1].decode("utf-8"))
-    plot_value_array(predictions_single[0])
-    _ = plt.xticks(range(CLASS_NUM), class_names, rotation=45)
 
 
 if __name__ == "__main__":
