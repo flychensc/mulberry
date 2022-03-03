@@ -106,11 +106,11 @@ def plot_value_array(predictions_array):
   thisplot[predicted_label].set_color('red')
 
 
-def prob():
+def prob(rule_name):
   predicting = pd.DataFrame(columns=['order_day', 'order_book_id', "prob", "classify"])
 
   # 从保存的模型重新加载一个新的 Keras 模型
-  model = tf.keras.models.load_model('saved_model/my_model')
+  model = tf.keras.models.load_model(pathlib.Path.cwd() / 'saved_model' / rule_name)
 
   # 导入数据集
   test_ds, test_count = load_datasheet('./img')
@@ -146,7 +146,8 @@ def prob():
         'order_day': order_day,
         'order_book_id': order_book_id,
         "prob": round(prob, 2),
-        "classify": classify
+        "classify": classify,
+        "rule": rule_name,
       }, ignore_index=True)
 
   print(predicting)
@@ -169,4 +170,5 @@ def prob():
 
 
 if __name__ == "__main__":
-  prob()
+  prob('losse_trend')
+  prob('strict_rule')
