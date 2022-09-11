@@ -2,7 +2,13 @@
 website API
 """
 
-from website.netease import get_balance_sheet, get_income_statement, get_cash_flow_statement, get_k_data
+from website.netease import get_profitability, get_balance_sheet, get_income_statement, get_cash_flow_statement, get_k_data
+
+PROFITABILITY_INDEX = [
+    '总资产利润率(%)', '主营业务利润率(%)', '总资产净利润率(%)', '成本费用利润率(%)', '营业利润率(%)',
+    '主营业务成本率(%)', '销售净利率(%)', '净资产收益率(%)', '股本报酬率(%)', '净资产报酬率(%)',
+    '资产报酬率(%)', '销售毛利率(%)', '三项费用比重(%)', '非主营比重(%)', '主营利润比重(%)'
+]
 
 BALANCE_SHEET_INDEX = [
     '货币资金(万元)', '结算备付金(万元)', '拆出资金(万元)', '交易性金融资产(万元)', '衍生金融资产(万元)',

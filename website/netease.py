@@ -26,6 +26,70 @@ HEADERS = {
 }
 
 
+def get_main_financial_indicators(code, part=None, annual=True):
+    """
+        获取个股主要财务指标
+    Parameters
+    ------
+        code:string
+                股票代码 e.g. 002356
+        part:string
+                None: 主要财务指标
+                "ylnl": 盈利能力
+        annual:bool, 默认 true
+                报表类型，默认年报
+    return
+    ------
+        DataFrame
+    """
+
+    # http://quotes.money.163.com/service/zycwzb_002356.html
+    url = r"http://quotes.money.163.com/service/zycwzb_%s.html" % code
+
+    session = requests.Session()
+    session.headers.update(HEADERS)
+
+    params = {}
+    if annual:
+        params["type"] = "year"
+    if part:
+        params["part"] = part
+
+    response = session.get(url, params=params, timeout=5)
+
+    response.encoding = "gbk"
+    session.close()
+
+    balance_sheet = pd.read_csv(
+        StringIO(response.text),
+        index_col=0,
+        na_values=np.NaN,
+        skipinitialspace=True)
+    # pylint: disable=E1101
+    # drop unnamed column
+    balance_sheet.drop(balance_sheet.columns[-1], axis=1, inplace=True)
+    # convert type
+    balance_sheet.columns = pd.to_datetime(balance_sheet.columns)
+    return balance_sheet.replace("--", np.NaN).astype(float)
+
+
+def get_profitability(code, annual=True):
+    """
+        获取个股主要财务指标[盈利能力]
+    Parameters
+    ------
+        code:string
+                股票代码 e.g. 002356
+        annual:bool, 默认 true
+                报表类型，默认年报
+    return
+    ------
+        DataFrame
+    """
+
+    return get_main_financial_indicators(code, "ylnl", annual)
+
+
 def get_balance_sheet(code, annual=True):
     """
         获取个股资产负债表
