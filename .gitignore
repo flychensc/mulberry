@@ -135,5 +135,3 @@ config.ini
 *.csv
 *.jpg
 *.xlsx
-saved_model*/
-backup_model*/

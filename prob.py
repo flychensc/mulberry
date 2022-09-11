@@ -75,7 +75,7 @@ def get_symbol(path_bytes):
 
 
 #class_names = sorted(item.name for item in pathlib.Path('./test').glob('*/') if item.is_dir())
-class_names = ['holding', 'loss', 'profit']
+class_names = ['loss', 'profit']
 CLASS_NUM = len(class_names)
 print(class_names)
 
@@ -110,7 +110,7 @@ def prob(rule_name):
   predicting = pd.DataFrame(columns=['order_day', 'order_book_id', "prob", "classify"])
 
   # 从保存的模型重新加载一个新的 Keras 模型
-  model = tf.keras.models.load_model(pathlib.Path.cwd() / 'saved_model' / rule_name)
+  model = tf.keras.models.load_model(pathlib.Path.cwd() / '..' / 'cranberry' / 'cooking' / rule_name / 'my_model')
 
   # 导入数据集
   test_ds, test_count = load_datasheet('./img')
