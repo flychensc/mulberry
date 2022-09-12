@@ -3,6 +3,7 @@ website API
 """
 
 from website.netease import get_profitability, get_balance_sheet, get_income_statement, get_cash_flow_statement, get_k_data
+from website.xueqiu import get_main_financial_indicators
 
 PROFITABILITY_INDEX = [
     '总资产利润率(%)', '主营业务利润率(%)', '总资产净利润率(%)', '成本费用利润率(%)', '营业利润率(%)',
