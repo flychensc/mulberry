@@ -34,6 +34,7 @@ def report(symbol_list, filename="FinancialReportAnalysis.xls"):
         df_report.loc[symbol] = [np.nan for i in RP_COLUMNS]
 
         profitabilit = website.get_profitability(symbol)
+        main_financial_indicators = website.get_main_financial_indicators(symbol)
         balance_sheet = website.get_balance_sheet(symbol).fillna(0)
         income_statement = website.get_income_statement(symbol).fillna(0)
         cash_flow_statement = website.get_cash_flow_statement(symbol).fillna(0)
@@ -44,6 +45,9 @@ def report(symbol_list, filename="FinancialReportAnalysis.xls"):
 
             print("{0:<20}: {1}".format('净资产收益率(%)', profitabilit.loc['净资产收益率(%)'][year]))
             print("{0:<20}: {1}".format('销售毛利率(%)', profitabilit.loc['销售毛利率(%)'][year]))
+
+            print("{0:<20}: {1}".format('净资产收益率(%)', main_financial_indicators.loc['净资产收益率(%)'][year]))
+            print("{0:<20}: {1}".format('销售毛利率(%)', main_financial_indicators.loc['销售毛利率(%)'][year]))
 
             print("{0:<20}: {1}".format('货币资金(万元)', balance_sheet.loc['货币资金(万元)'][year]))
             print("{0:<20}: {1}".format('交易性金融资产(万元)', balance_sheet.loc['交易性金融资产(万元)'][year]))
@@ -86,7 +90,7 @@ def report(symbol_list, filename="FinancialReportAnalysis.xls"):
         df_report.loc[symbol][RP_COLUMNS[4]] = income_statement.loc['营业总收入(万元)'][year] / (balance_sheet.loc['固定资产(万元)'][year] + balance_sheet.loc['无形资产(万元)'][year])
 
         # 毛利率保持40%以上有持续竞争力
-        df_report.loc[symbol][RP_COLUMNS[5]] = profitabilit.loc['销售毛利率(%)'][year]
+        df_report.loc[symbol][RP_COLUMNS[5]] = main_financial_indicators.loc['销售毛利率(%)'][year]
 
         # 费用（销售、管理、正数的财务费用）在毛利润30%以内，不大于70%也勉强可以
         df_report.loc[symbol][RP_COLUMNS[6]] = (income_statement.loc['销售费用(万元)'][year] + income_statement.loc['管理费用(万元)'][year] + (income_statement.loc['财务费用(万元)'][year] if income_statement.loc['财务费用(万元)'][year] > 0 else 0)) / income_statement.loc['利润总额(万元)'][year]

@@ -2,6 +2,7 @@
 雪球网接口
 """
 
+import datetime
 import requests
 import numpy as np
 import pandas as pd
@@ -72,6 +73,8 @@ def get_main_financial_indicators(code, annual=True):
 
     for data in response.json()['data']['list']:
         year = data['report_name'][:4] + "-12-31"
+        # 类型转换
+        year = datetime.datetime.strptime(year, "%Y-%m-%d")
 
         mf_indicators[year] = np.nan
 
