@@ -27,7 +27,7 @@ RP_COLUMNS = [
 ]
 
 
-def report(symbol_list, filename="FinancialReportAnalysis.xls"):
+def report(symbol_list):
     df_report = pd.DataFrame(columns=RP_COLUMNS)
 
     for symbol in symbol_list:
@@ -133,11 +133,10 @@ def report(symbol_list, filename="FinancialReportAnalysis.xls"):
         print("财报分析:")
         print(df_report)
 
-    # FutureWarning: As the xlwt package is no longer maintained, the xlwt engine will be removed in a future version of pandas. This is the only engine in pandas that supports writing in the xls format. Install openpyxl and write to an xlsx file instead. You can set the option io.excel.xls.writer to 'xlwt' to silence this warning. While this option is deprecated and will also raise a warning, it can be globally set and the warning suppressed.
-    df_report.to_excel(filename, index=True)
+    return df_report
 
 
-def do_report():
+def do_report(filename="FinancialReportAnalysis.xls"):
     config = configparser.ConfigParser()
     config.read('config.ini')
 
@@ -145,7 +144,10 @@ def do_report():
     if DEBUG:
         symbol_list = ['002324']
 
-    report(symbol_list)
+    df_report = report(symbol_list)
+
+    # FutureWarning: As the xlwt package is no longer maintained, the xlwt engine will be removed in a future version of pandas. This is the only engine in pandas that supports writing in the xls format. Install openpyxl and write to an xlsx file instead. You can set the option io.excel.xls.writer to 'xlwt' to silence this warning. While this option is deprecated and will also raise a warning, it can be globally set and the warning suppressed.
+    df_report.to_excel(filename, index=True)
 
 
 if __name__ == "__main__":

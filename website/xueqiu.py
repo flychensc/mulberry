@@ -7,6 +7,11 @@ import requests
 import numpy as np
 import pandas as pd
 
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 HEADERS = {
     'authority': 'stock.xueqiu.com',
     'method': 'GET',
@@ -17,7 +22,7 @@ HEADERS = {
     'accept-encoding': 'gzip, deflate, br',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
     # F12 - [网络] - [标头]
-    'cookie': '',
+    'cookie': config.get('COOKIE', 'XUEQIU'),
     'origin': 'https://xueqiu.com',
     # 随代码变化
     'referer': 'https://xueqiu.com/snowman/S/SZ002324/detail',
