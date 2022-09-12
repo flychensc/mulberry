@@ -17,7 +17,7 @@ HEADERS = {
     'accept-encoding': 'gzip, deflate, br',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
     # F12 - [网络] - [标头]
-    'cookie': 'device_id=ac924898ea7acf6ab2eff3e83d52a951; s=bk12p3vs9w; remember=1; xq_a_token=6ca8d94c0605ec207b55b89ea3bedaa1c611a8eb; xqat=6ca8d94c0605ec207b55b89ea3bedaa1c611a8eb; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjE2MjI3NDQ5NjIsImlzcyI6InVjIiwiZXhwIjoxNjY0Mzc0Mjg0LCJjdG0iOjE2NjI5NTA3MzM0NTAsImNpZCI6ImQ5ZDBuNEFadXAifQ.ioMyzTAQmGVWjjFcd-xk0lkpO5rrkt4b03RFQrneD12AUgd7UhBadVe1ur9LKiPf8-Fv-0ldi4SxwWsG_9ALdtmqZEx64qej19KolK_ctvOpTfMWacVTOTMAAiMFnCemnHzGX42CBfQ_k7leE2fbgKNpukJtzDNtmjSOzZgd8MQ9U8I26o0JeP40S0T26tXS_8b3I7fRPcAl5lapnuWGIPKhrb2lbBBAabEwktztlWA5eu4z80QP_8Rn8aT30cR_oDVagKvVtm6FIiqBeOeMRlwL6VMOlDq1bJFS-QCtiSoMlr-uLA_TGYBHpy7C9KRdqFZInkAknu0yN47xEXUOKA; xq_r_token=b9a026064ab57811e7e3f2178d2b882415174eef; xq_is_login=1; u=1622744962; Hm_lvt_1db88642e346389874251b5a1eded6e3=1662950720,1662959218,1662961258,1662962805; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1662963183',
+    'cookie': '',
     'origin': 'https://xueqiu.com',
     # 随代码变化
     'referer': 'https://xueqiu.com/snowman/S/SZ002324/detail',
