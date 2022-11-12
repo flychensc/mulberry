@@ -170,5 +170,5 @@ def prob(rule_name):
 
 
 if __name__ == "__main__":
-  prob('losse_trend')
+  prob('loose_trend')
   prob('strict_rule')
